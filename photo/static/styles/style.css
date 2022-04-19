@@ -1,29 +1,41 @@
 
 body {
-    height: 100vh;
-}
-
-h1 {
-    color: blue;
+    background-color: rgb(206, 204, 204);
 }
 
 
-.mycontainer {
-    max-height: 800px;
+.mycontainer a{
+    color: black;
 }
 
+
+.mycontainer1 {
+    padding: 0 100px;
+}
+
+.mycarousel {
+    max-height: 100%;
+    border-radius: 20px;
+}
+
+.mycarousel h1{
+    color: rgb(97, 88, 88);
+}
 
 
 footer {
-    position: fixed;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
     color: white;
     padding: 0 100px;
-    margin-top: 0;
+    margin-top: 100px;
     margin-bottom: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: black;
+    background-color: rgb(238, 238, 238);
+}
+
+footer p{
+    color: black;
 }
