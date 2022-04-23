@@ -2,6 +2,39 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
 from mptt.models import MPTTModel, TreeForeignKey
+from django_countries.fields import CountryField
+from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager, PermissionsMixin)
+from django.utils.translation import gettext_lazy as _
+
+class CustomAccountManager(BaseUserManager):
+    
+    def create_superuser(self, email, user_name, password, **other_fields):
+        other_fields.setdefault('is_staff', True)
+        other_fields.setdefault('is_superuser', True)
+        other_fields.setdefault('is_active', True)
+        
+        if other_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must be assigned to is_staff=True')
+        if other_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must be assigned to is_staff=True')
+        
+
+        return self.create_user(email, user_name, password, **other_fields)
+    
+    def create_user(self, email, user_name, password, **other_fields):
+        if not email:
+            raise ValueError(_('You must provide an email adress'))
+        
+        email = self.normalize_email(email)
+
+        user = self.model(email=email, user_name=user_name, **other_fields)
+
+        user.set_password(password)
+
+        user.save()
+        return user
+
+
 
 class Facility_type(models.Model): 
     title = models.CharField(verbose_name=_("title"), help_text=_("Required"), max_length=255)
@@ -9,44 +42,72 @@ class Facility_type(models.Model):
     working_places = models.IntegerField()
 
 
-class Client(models.Model):
-    facility = models.ForeignKey(Facility_type, related_name='facilities', on_delete=models.RESTRICT)
-    first_name = models.CharField(max_length=50)
-    last_name = models.CharField(max_length=50)
-    email = models.EmailField()
+class UserBase(AbstractBaseUser, PermissionsMixin):
+    email = models.EmailField(_('email address'), unique=True)
+    user_name = models.CharField(max_length=150, unique=True)
+    first_name = models.CharField(max_length=150, blank=True)
+    about = models.TextField(_('about'), max_length=500, blank=True)
+    country = CountryField()
+    phone_number = models.CharField(max_length=15, blank=True)
+    postcode = models.CharField(max_length=12, blank=True)
+    address_line_1 = models.CharField(max_length=150, blank=True)
+    address_line_2 = models.CharField(max_length=150, blank=True)
+    town_city = models.CharField(max_length=150, blank=True)
+    is_active = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)
     is_professional = models.BooleanField(default=None)
     amount_of_orders = models.IntegerField(default=0)
+    created = models.DateField(auto_now_add=True)
+    updated = models.DateField(auto_now=True)
 
-    def amount_of_orders(self):
-        for order in self.clients.all():
-            amount_of_orders = amount_of_orders + 1
+    objects = CustomAccountManager()
+
+    USERNAME_FIELD = 'email'
+
+    REQUIRED_FIELDS = ['user_name']
+
+    class Meta:
+        verbose_name = 'Accounts'
+        verbose_name_plural = 'Accounts'
+
+
+    def orders(self):
+        self.amount_of_orders = self.amount_of_orders + 1
         
-        if amount_of_orders > 10:
-            is_professional = True
+        if self.amount_of_orders > 10:
+            self.is_professional = True        
+
+    def __str__(self):
+        return self.user_name
 
 
 class Order(models.Model):
-    client = models.ForeignKey(Client, related_name='clients', on_delete=models.CASCADE)
+    facility = models.ForeignKey(Facility_type, related_name='facilities', on_delete=models.RESTRICT)
+    client = models.ForeignKey(UserBase, related_name='client', on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     paid = models.BooleanField(default=False)
     urgency_rate = models.IntegerField(default = 3)
+    is_urgent = models.BooleanField(default=False)
 
     class Meta:
         ordering = ('-created',)
         verbose_name = 'Заказ'
         verbose_name_plural = 'Заказы'
+    
+    def __init__(self):
+        self.client.orders()
 
     def __str__(self):
         return 'Order {}'.format(self.id)
-
-    def urgency(self):
-        if urgency_rate < 2:
-            is_urgent = True
-            regular_price = regular_price * 2
+        
 
     def get_total_cost(self):
-        return sum(service.get_total_price() for service in self.services.all())
+        if self.urgency_rate < 3:
+            self.is_urgent = True
+            return sum(service.get_total_price() for service in self.services.all())*2
+        else:
+            return sum(service.get_total_price() for service in self.services.all())
 
 
 class Services(models.Model):
@@ -59,15 +120,16 @@ class Services(models.Model):
     regular_price = models.FloatField(verbose_name=_("Regular price"), help_text=_("Максимально 10 цифр"))
     created_at = models.DateTimeField(_("Created at"), auto_now_add=True, editable=False)
     updated_at = models.DateTimeField(_("Updated at"), auto_now_add=True)
-
-    def __str__(self):
-        return self.title
     
     def get_total_price(self):
-        regular_price = regular_price * number_of_photos
+        self.regular_price = self.regular_price * self.number_of_photos
 
                 
-        if number_of_photos > 20:
-            regular_price = regular_price * 0.90
+        if self.number_of_photos > 20:
+            self.regular_price = self.regular_price * 0.90
+    
+    
+    def __str__(self):
+        return self.title
 
 

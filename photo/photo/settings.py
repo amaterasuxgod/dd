@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_countries',
     'mptt',
     'module1',
 ]
@@ -127,6 +128,14 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+
+
+
+AUTH_USER_MODEL = 'module1.UserBase'
+
+LOGIN_URL = '/module1/login/'
+
 
 
 

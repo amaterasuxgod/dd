@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 d-flex align-items-center justify-content-center">
+            <div class="register-container text-center">
+                <form action="." method="post" class="account-form">
+                    {% csrf_token %}
+                    <h3 class='mt-4' style="color: white;">Создайте аккаунт</h3>
+
+                    {% if form.errors %}
+                    <p>Пожалуйста исправьте следующие ошибки: </p>
+                    {% for field in form %}
+                    {% if field.errors %}
+                    <div class="alert alert-primary" role="alert">
+                        {{ field.label }}: {{ field.errors|striptags }}
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                    {% endif %}
+                    
+                    <label style="display:block;" class="my-4">{{ form.user_name.label }}<span class="text-muted small"> (Обязательно)</span></label>
+                    {{ form.user_name }}
+                    <label style="display:block;" class="my-4">Введите Email<span class="text-muted small">
+                            (Обязательно)</span></label>
+                    {{ form.email }}
+                    <label style="display:block;" class="my-4">{{ form.password.label}}<span class="text-muted small"> (Минимум 8 символов и 1 цифра)</span></label>
+                    {{ form.password }}
+                    <label style="display:block;" class="my-4">{{ form.password2.label}}<span class="text-muted small">
+                            (Обязательно)</span></label>
+                    {{ form.password2 }}
+                    <br>
+                    <button class="btn btn-info my-4 align-items-center register-button" type="submit">Зарегистрироваться</button>
+                    <p class="text-center">
+                        <a href="{% url 'module1:login' %}" style="text-decoration: none;">Уже есть аккаунт?</a>
+                    </p>
+                </form>
+            </div>
+                
+        </div>
+    </div>
+</div>
+{% endblock content %}
