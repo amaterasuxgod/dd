@@ -38,4 +38,22 @@
         </button>
       </div>
     </div>
+    <section class="products-section">
+      {% for item in object_list %}
+        <!-- {% if item.product_is_featured %} -->
+      <div class="products-section-item">
+          <!-- <a href="{% url 'index:pc-detail' item.id %}">
+          {% for image in item.product_image.all %}
+          {% if image.is_feature %}
+          <img src="{{ image.image.url }}" alt="" width='330' height='330'>
+          {% endif %}
+          {% endfor %} -->
+          <h3 class='products-item-title'>{{ item.title }}</h3>
+          <p>{{ item.regular_price }} руб.</p>
+          <i class="fas fa-2x fa-long-arrow-alt-right"></i>
+        </a>
+      </div>
+       <!-- {% endif %} -->
+      {% endfor %}
+      </section>
 {% endblock content %}

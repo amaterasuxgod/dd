@@ -55,7 +55,7 @@ class UserBase(AbstractBaseUser, PermissionsMixin):
     town_city = models.CharField(max_length=150, blank=True)
     is_active = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
-    is_professional = models.BooleanField(default=None)
+    is_professional = models.BooleanField(default=False)
     amount_of_orders = models.IntegerField(default=0)
     created = models.DateField(auto_now_add=True)
     updated = models.DateField(auto_now=True)
@@ -82,8 +82,8 @@ class UserBase(AbstractBaseUser, PermissionsMixin):
 
 
 class Order(models.Model):
-    facility = models.ForeignKey(Facility_type, related_name='facilities', on_delete=models.RESTRICT)
-    client = models.ForeignKey(UserBase, related_name='client', on_delete=models.CASCADE)
+    facility = models.ForeignKey(Facility_type, related_name='facilities', on_delete=models.RESTRICT, default=None)
+    client = models.ForeignKey(UserBase, related_name='client', on_delete=models.CASCADE, default=None)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     paid = models.BooleanField(default=False)
