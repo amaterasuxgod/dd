@@ -42,6 +42,15 @@ class Facility_type(models.Model):
     working_places = models.IntegerField()
 
 
+    class Meta:
+        verbose_name = 'Филиалы и киоски'
+        verbose_name_plural = 'Филиалы и киоски'
+
+
+
+
+
+
 class UserBase(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(_('email address'), unique=True)
     user_name = models.CharField(max_length=150, unique=True)
@@ -67,8 +76,8 @@ class UserBase(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ['user_name']
 
     class Meta:
-        verbose_name = 'Accounts'
-        verbose_name_plural = 'Accounts'
+        verbose_name = 'Аккаунт'
+        verbose_name_plural = 'Аккаунты'
 
 
     def orders(self):
@@ -82,8 +91,8 @@ class UserBase(AbstractBaseUser, PermissionsMixin):
 
 
 class Order(models.Model):
-    facility = models.ForeignKey(Facility_type, related_name='facilities', on_delete=models.RESTRICT, default=None)
-    client = models.ForeignKey(UserBase, related_name='client', on_delete=models.CASCADE, default=None)
+    facility = models.ForeignKey(Facility_type, related_name='facilities', on_delete=models.RESTRICT)
+    client = models.ForeignKey(UserBase, related_name='client', on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     paid = models.BooleanField(default=False)
@@ -110,17 +119,25 @@ class Order(models.Model):
             return sum(service.get_total_price() for service in self.services.all())
 
 
+
 class Services(models.Model):
-    order = models.ForeignKey(Order, related_name='services', on_delete=models.RESTRICT)
     title = models.CharField(verbose_name=_("title"), help_text=_("Required"), max_length=255)
     description = models.TextField(verbose_name=_("description"), help_text=_("Not required"), blank=True)
+    image = models.ImageField(verbose_name='image', help_text=_("Upload a product image"), default="photos/photo-roll.png", upload_to="photos/")
     number_of_photos = models.IntegerField(default=1)
-    paper_type = models.CharField(verbose_name=_("title"), help_text=_("Required"), max_length=255)
-    photo_format =  models.CharField(verbose_name=_("title"), help_text=_("Required"), max_length=255)
+    paper_type = models.CharField(verbose_name=_("paper type"), help_text=_("Required"), max_length=255, blank=True)
+    photo_format =  models.CharField(verbose_name=_("photo format"), help_text=_("Required"), max_length=255, blank=True)
     regular_price = models.FloatField(verbose_name=_("Regular price"), help_text=_("Максимально 10 цифр"))
     created_at = models.DateTimeField(_("Created at"), auto_now_add=True, editable=False)
     updated_at = models.DateTimeField(_("Updated at"), auto_now_add=True)
     
+    class Meta:
+        ordering = ('-created_at',)
+        verbose_name = 'Сервис'
+        verbose_name_plural = 'Сервисы'
+
+
+
     def get_total_price(self):
         self.regular_price = self.regular_price * self.number_of_photos
 
@@ -131,5 +148,9 @@ class Services(models.Model):
     
     def __str__(self):
         return self.title
+
+class OrderService(models.Model):
+    order = models.ForeignKey(Order, related_name='order', on_delete=models.CASCADE)
+    service = models.ForeignKey(Services, related_name='service', on_delete=models.CASCADE)
 
 

@@ -1,0 +1,39 @@
+{% extends "base.html"%}
+{% block content %}
+
+
+<div class="container-fluid products-detail-nav" style="margin-bottom:50px;">
+  <div class="row products-detail-row1">
+    <div class="col-6 products-detail-column-1" style="padding: 0px">
+      <nav class="navbar navbar-expand-lg" style="padding: 0px">
+        <div class="container-fluid" style="padding: 0px">
+          <button class="navbar-toggler mybutton" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span style='color:white;'><i class="fas fa-angle-down" style="color:white;"></i></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup" style="padding:0px">
+            <div class="navbar-nav products-detail-nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Описание</a>
+            </div>
+          </div>
+        </div>
+      </nav>  
+    </div>
+    <div class="col-6 d-flex justify-content-end align-items-center">
+      <h3 class="price">{{ object.regular_price }} BYN</h3>  
+    </div>
+  </div>
+  <div class="row products-detail-row2">
+    <div class="col-lg">
+        <div class="big-image-container my-2 d-flex justify-content-center align-items-center" id="big-image-container">
+            <img src="{{ object.image.url }}" alt="">
+        </div>
+    </div>
+    <div class="col-lg products-detail-column-2 my-2">
+      <h1>{{ object.title }}</h1>
+      <p class="my-4">{{ object.description }}</p>
+      <h2 class='product-detail-price'>{{ object.regular_price}} BYN</h2>
+    </div>
+  </div>
+  
+</div>
+{% endblock content %}

@@ -38,3 +38,8 @@ def account_register(request):
 class mainView(ListView):
     model = Services
     template_name = './main.html'
+
+
+class ItemDetailView(DetailView):
+    model = Services
+    template_name = './service_detail.html'
