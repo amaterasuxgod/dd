@@ -7,9 +7,39 @@ body {
     font-family: 'Roboto Condensed', sans-serif;
 }
 
+* a {
+    color: black;
+    transition: 1s;
+}
+
+* a:hover{
+    color: rgb(97, 88, 88);
+}
+
+
+.logo {
+    margin: 10px;
+}
+
+.logo a {
+    color: black;
+    text-decoration: none;
+    font-size: 40px;
+    font-family: 'Tapestry', cursive;
+}
+
 
 .mycontainer a{
     color: black;
+    transition: 1s;
+}
+
+.mycontainer a:hover{
+    color: rgb(97, 88, 88);
+}
+
+.nav-link1 {
+    margin: 25px 0;  
 }
 
 
@@ -59,7 +89,12 @@ body {
 
 .products-section-item a {
     text-decoration: none;
-    color: var(--textColor);
+    color: black;
+    transition: 1s;
+}
+
+.products-section-item a:hover {
+    color: rgb(97, 88, 88);
 }
 
 .products-section-item p, .products-section-item h3{
@@ -155,4 +190,9 @@ footer p{
 footer a{
     color: black;
     text-decoration: none;
+    transition: 1s;
+}
+
+footer a:hover {
+    color: rgb(97, 88, 88);
 }

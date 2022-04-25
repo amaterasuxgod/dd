@@ -14,6 +14,19 @@ def Adresses(request):
     return render(request, 'adresses.html')
 
 
+def Goods_by_category(request):
+    goods = Services.objects.filter(category='good')
+    context = {"goods": goods}
+    return render(request, 'goods_by_category.html', context)
+
+
+
+def Services_by_category(request):
+    services = Services.objects.filter(category='service')
+    context = {"services": services}
+    return render(request, 'services_by_category.html', context)
+
+
 def account_register(request):
 
     if request.user.is_authenticated:

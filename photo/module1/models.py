@@ -45,6 +45,9 @@ class Facility_type(models.Model):
     class Meta:
         verbose_name = 'Филиалы и киоски'
         verbose_name_plural = 'Филиалы и киоски'
+    
+    def __str__(self):
+        return self.title
 
 
 
@@ -122,6 +125,11 @@ class Order(models.Model):
 
 class Services(models.Model):
     title = models.CharField(verbose_name=_("title"), help_text=_("Required"), max_length=255)
+    CHOICES = [
+        ('good', 'Goods'),
+        ('service', 'Services'),
+    ]
+    category = models.CharField(max_length=32, choices=CHOICES, default='good')
     description = models.TextField(verbose_name=_("description"), help_text=_("Not required"), blank=True)
     image = models.ImageField(verbose_name='image', help_text=_("Upload a product image"), default="photos/photo-roll.png", upload_to="photos/")
     number_of_photos = models.IntegerField(default=1)
