@@ -11,6 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital@1&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Tapestry&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'styles/all.css' %}">
     <title>Photo center</title>
 </head>
 <body>
@@ -30,6 +31,9 @@
               <li><a class="dropdown-item" href="{% url 'module1:services-by-category'%}">Услуги</a></li>
               <li><a class="dropdown-item" href="{% url 'module1:goods-by-category'%}">Товары</a></li>
             </ul>
+            <li class="nav-item">
+              <a class="nav-link nav-link1" href="{% url 'module1:login'%}"><i class="fas fa-user ms-3"></i></a>
+            </li>
           </li>
         </ul>
   </div>
@@ -41,8 +45,8 @@
       <div>
        <p><a href="{% url 'module1:contacts'%}">Контакты</a></p>
        <p><a href="{% url 'module1:adresses'%}">Адреса филиалов</a></p>
-       <p><a href="#">Услуги</a></p>
-       <p><a href="#">Товары</a></p>
+       <p><a href="{% url 'module1:services-by-category'%}">Услуги</a></p>
+       <p><a href="{% url 'module1:goods-by-category'%}">Товары</a></p>
       </div>
     </footer>
 </body>

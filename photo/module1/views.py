@@ -30,7 +30,7 @@ def Services_by_category(request):
 def account_register(request):
 
     if request.user.is_authenticated:
-        return redirect('/')
+        return redirect('/home/homepage/')
     
     if request.method == 'POST':
         registerForm = RegistrationForm(request.POST)
@@ -43,7 +43,9 @@ def account_register(request):
 
             return render(request, 'main.html')
     
-    return render(request, 'account/registration/register.html', {'form': registerForm})
+    else:
+        registerForm = RegistrationForm()
+    return render(request, 'register.html', {'form': registerForm})
 
 
 

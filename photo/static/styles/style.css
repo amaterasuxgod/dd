@@ -82,9 +82,14 @@ body {
 .products-section > div {
     position: relative;
     text-align: center;
-    border-radius: 10px;
     background-color: var(--contentBack);
     border: 1px solid gray;
+    transition: 0.3s;
+}
+
+.products-section > div:hover {
+    border-radius: 20px;
+    border: 2px solid gray;
 }
 
 .products-section-item a {
