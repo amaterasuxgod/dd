@@ -94,32 +94,21 @@ class UserBase(AbstractBaseUser, PermissionsMixin):
 
 
 class Order(models.Model):
-    facility = models.ForeignKey(Facility_type, related_name='facilities', on_delete=models.RESTRICT)
     client = models.ForeignKey(UserBase, related_name='client', on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     paid = models.BooleanField(default=False)
-    urgency_rate = models.IntegerField(default = 3)
-    is_urgent = models.BooleanField(default=False)
 
     class Meta:
         ordering = ('-created',)
         verbose_name = 'Заказ'
         verbose_name_plural = 'Заказы'
+        
+    def get_total_cost(self):
+            return sum(order.price for order in self.services.all())
     
-    def __init__(self):
-        self.client.orders()
-
     def __str__(self):
         return 'Order {}'.format(self.id)
-        
-
-    def get_total_cost(self):
-        if self.urgency_rate < 3:
-            self.is_urgent = True
-            return sum(service.get_total_price() for service in self.services.all())*2
-        else:
-            return sum(service.get_total_price() for service in self.services.all())
 
 
 
@@ -132,9 +121,6 @@ class Services(models.Model):
     category = models.CharField(max_length=32, choices=CHOICES, default='good')
     description = models.TextField(verbose_name=_("description"), help_text=_("Not required"), blank=True)
     image = models.ImageField(verbose_name='image', help_text=_("Upload a product image"), default="photos/photo-roll.png", upload_to="photos/")
-    number_of_photos = models.IntegerField(default=1)
-    paper_type = models.CharField(verbose_name=_("paper type"), help_text=_("Required"), max_length=255, blank=True)
-    photo_format =  models.CharField(verbose_name=_("photo format"), help_text=_("Required"), max_length=255, blank=True)
     regular_price = models.FloatField(verbose_name=_("Regular price"), help_text=_("Максимально 10 цифр"))
     created_at = models.DateTimeField(_("Created at"), auto_now_add=True, editable=False)
     updated_at = models.DateTimeField(_("Updated at"), auto_now_add=True)
@@ -143,15 +129,6 @@ class Services(models.Model):
         ordering = ('-created_at',)
         verbose_name = 'Сервис'
         verbose_name_plural = 'Сервисы'
-
-
-
-    def get_total_price(self):
-        self.regular_price = self.regular_price * self.number_of_photos
-
-                
-        if self.number_of_photos > 20:
-            self.regular_price = self.regular_price * 0.90
     
     
     def __str__(self):
@@ -160,5 +137,29 @@ class Services(models.Model):
 class OrderService(models.Model):
     order = models.ForeignKey(Order, related_name='order', on_delete=models.CASCADE)
     service = models.ForeignKey(Services, related_name='service', on_delete=models.CASCADE)
+    urgency_rate = models.IntegerField(default = 3)
+    facility = models.ForeignKey(Facility_type, related_name='facilities', on_delete=models.RESTRICT, default=None)
+    is_urgent = models.BooleanField(default=False)
+    number_of_photos = models.IntegerField(default=1)
+    paper_type = models.CharField(verbose_name=_("paper type"), help_text=_("Required"), max_length=255, blank=True)
+    photo_format =  models.CharField(verbose_name=_("photo format"), help_text=_("Required"), max_length=255, blank=True)
+    price = models.FloatField(verbose_name=_("total price"), help_text=_("Максимально 10 цифр"), default=None)
+
+    class Meta:
+        verbose_name = 'Детали заказа'
+        verbose_name_plural = 'Детали заказов'
+    
+
+    def get_total_price(self):
 
 
+        self.price = self.price * self.number_of_photos
+
+                
+        if self.number_of_photos > 20:
+            self.price = self.price * 0.90
+        
+
+        if self.urgency_rate < 3:
+            self.is_urgent = True
+            self.price = self.price * 2

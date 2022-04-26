@@ -88,8 +88,7 @@ body {
 }
 
 .products-section > div:hover {
-    border-radius: 20px;
-    border: 2px solid gray;
+    border-radius: 30px;
 }
 
 .products-section-item a {

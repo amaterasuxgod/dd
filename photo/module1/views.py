@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView
-from .models import Services
+from .models import Services, UserBase
 from django.contrib.auth.decorators import login_required
 from .forms import RegistrationForm
 from django.http.response import HttpResponse
@@ -47,6 +47,13 @@ def account_register(request):
         registerForm = RegistrationForm()
     return render(request, 'register.html', {'form': registerForm})
 
+
+
+def DashboardView(request):
+    if request.user.is_authenticated:
+        return render(request, 'dashboard.html')
+    else:
+        return redirect('/home/login/')
 
 
 

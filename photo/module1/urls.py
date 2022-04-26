@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import mainView, Contacts, Adresses, account_register, ItemDetailView, Services_by_category, Goods_by_category
+from .views import mainView, Contacts, Adresses, account_register, ItemDetailView, Services_by_category, Goods_by_category, DashboardView
 from django.contrib.auth import views as auth_views
 
 
@@ -14,4 +14,5 @@ urlpatterns = [
     path('register/', account_register, name="account-register"),
     path('services_by_category/', Services_by_category, name="services-by-category"),
     path('goods_by_category/', Goods_by_category, name="goods-by-category"),
+    path('dashboard/', DashboardView, name="dashboard"),
 ]
