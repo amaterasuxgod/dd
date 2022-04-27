@@ -2,6 +2,34 @@
 {% block content %}
 
 
+<div class="modal fade" id="download" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content mymodal-content rounded-5">
+      <div class="modal-header my-modal-header">
+          <form action="{% url 'module1:detail' object.id %}" method="POST">
+          {% csrf_token %}
+          <label for="form_input1">Срочность (дней)</label>
+          <input type="text" placeholder="Срочность (дней)" class='modal-input' name='urgency' id="form_input1">
+          <br>
+          <label for="form_input2">Адрес филиала</label>
+          <input type="text" placeholder="Адрес филиала" class='modal-input' name='adress' id="form_input2">
+          <br>
+          <label for="form_input3">Количество фотографий</label>
+          <input type="text" placeholder="Количество фотографий" class='modal-input' name='photo_number' id="form_input3">
+          <br>
+          <label for="form_input4">Тип бумаги</label>
+          <input type="text" placeholder="Тип бумаги" class='modal-input' name='paper_type' id="form_input4">
+          <br>
+          <label for="form_input5">Формат бумаги</label>
+          <input type="text" placeholder="Формат бумаги" class='modal-input' name='paper_format' id="form_input5">
+          <br>
+          <button type="submit" class="btn btn-outline-secondary">Добавить в корзину</button>
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="container-fluid products-detail-nav" style="margin-bottom:50px;">
   <div class="row products-detail-row1">
     <div class="col-6 products-detail-column-1" style="padding: 0px">
@@ -32,8 +60,23 @@
       <h1>{{ object.title }}</h1>
       <p class="my-4">{{ object.description }}</p>
       <h2 class='product-detail-price'>{{ object.regular_price}} BYN</h2>
+      <button type="button" onclick="showmodal()" class="btn btn-info" style="margin-top:30px">Заказать</button>
     </div>
   </div>
   
 </div>
+
+
+<script>
+   function showmodal()
+{
+$("#download").modal("show");
+};
+
+function showmodal1()
+{
+$("#download1").modal("show");
+};
+</script>
+
 {% endblock content %}
