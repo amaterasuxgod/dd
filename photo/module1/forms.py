@@ -1,5 +1,5 @@
 from django import forms
-from .models import UserBase
+from .models import OrderService, UserBase
 
 
 class RegistrationForm(forms.ModelForm):
@@ -32,3 +32,14 @@ class RegistrationForm(forms.ModelForm):
         if email.count():
             raise forms.ValidationError('Данный email уже привязан к аккаунту')
         return email
+
+
+class OrderForm(forms.ModelForm):
+    urgency_rate = forms.IntegerField(label='Введите срочность заказа (в днях)')
+    facility = forms.CharField(label='Введите филиал')
+    number_of_photos = forms.IntegerField(label='Введите количество фотографий')
+    paper_type = forms.CharField(label='Введите тип бумаги')
+    photo_format =  forms.CharField(label='Введите формат фото')
+    class Meta:
+        model = OrderService
+        fields = ('urgency_rate', 'facility', 'number_of_photos', 'paper_type', 'photo_format')               

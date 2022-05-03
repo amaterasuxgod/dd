@@ -6,7 +6,7 @@
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content mymodal-content rounded-5">
       <div class="modal-header my-modal-header">
-          <form action="{% url 'module1:detail' object.id %}" method="POST">
+          <form action="{% url 'module1:detail' services.id %}" method="POST">
           {% csrf_token %}
           <label for="form_input1">Срочность (дней)</label>
           <input type="text" placeholder="Срочность (дней)" class='modal-input' name='urgency' id="form_input1">
@@ -47,19 +47,19 @@
       </nav>  
     </div>
     <div class="col-6 d-flex justify-content-end align-items-center">
-      <h3 class="price">{{ object.regular_price }} BYN</h3>  
+      <h3 class="price">{{ services.regular_price }} BYN</h3>  
     </div>
   </div>
   <div class="row products-detail-row2">
     <div class="col-lg">
         <div class="big-image-container my-2 d-flex justify-content-center align-items-center" id="big-image-container">
-            <img src="{{ object.image.url }}" alt="">
+            <img src="{{ services.image.url }}" alt="">
         </div>
     </div>
     <div class="col-lg products-detail-column-2 my-2">
-      <h1>{{ object.title }}</h1>
-      <p class="my-4">{{ object.description }}</p>
-      <h2 class='product-detail-price'>{{ object.regular_price}} BYN</h2>
+      <h1>{{ services.title }}</h1>
+      <p class="my-4">{{ services.description }}</p>
+      <h2 class='product-detail-price'>{{ services.regular_price}} BYN</h2>
       <button type="button" onclick="showmodal()" class="btn btn-info" style="margin-top:30px">Заказать</button>
     </div>
   </div>
