@@ -1,5 +1,5 @@
 from django import forms
-from .models import OrderService, UserBase
+from .models import OrderService, UserBase, Facility_type
 
 
 class RegistrationForm(forms.ModelForm):
@@ -42,4 +42,11 @@ class OrderForm(forms.ModelForm):
     photo_format =  forms.CharField(label='Введите формат фото')
     class Meta:
         model = OrderService
-        fields = ('urgency_rate', 'facility', 'number_of_photos', 'paper_type', 'photo_format')               
+        fields = ('urgency_rate', 'facility', 'number_of_photos', 'paper_type', 'photo_format')
+
+    def data_check(self):
+        data = self.cleaned_data
+        facility = Facility_type.objects.filter(title=data['title'])
+        if not facility.count():
+            raise forms.ValidationError('Данного филиала не существует')
+        return data               

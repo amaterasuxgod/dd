@@ -65,8 +65,8 @@ class mainView(ListView):
 def ItemDetailView(request,pk):
     services = Services.objects.get(id=pk)
     if request.method == 'POST':
-        orderForm = OrderForm(request.POST)
-        if orderForm.is_valid():
+        orderForm = OrderForm(request.POST)                                    
+        if orderForm.is_valid():                                                                      
             order = Order.objects.create(client=request.user)
             order_service = orderForm.save(commit=False)
             order_service.order = order.id
@@ -79,6 +79,9 @@ def ItemDetailView(request,pk):
             order_service.save()
 
             return render(request, 'order_success.html')
+        
+        else:
+            return HttpResponse('Validation error')
     
     else:
         orderForm = OrderForm()
