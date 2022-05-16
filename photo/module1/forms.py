@@ -35,8 +35,12 @@ class RegistrationForm(forms.ModelForm):
 
 
 class OrderForm(forms.ModelForm):
+
+    Facility_choices = [tuple[x.title] for x in Facility_type.objects.all()]
+
+
     urgency_rate = forms.IntegerField(label='Введите срочность заказа (в днях)')
-    facility = forms.CharField(label='Введите филиал')
+    facility = forms.CharField(label='Введите филиал', widget=forms.Select(choices=Facility_choices))
     number_of_photos = forms.IntegerField(label='Введите количество фотографий')
     paper_type = forms.CharField(label='Введите тип бумаги')
     photo_format =  forms.CharField(label='Введите формат фото')

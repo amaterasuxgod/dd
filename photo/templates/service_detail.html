@@ -8,21 +8,26 @@
       <div class="modal-header my-modal-header">
           <form action="{% url 'module1:detail' services.id %}" method="POST">
           {% csrf_token %}
-          <label for="form_input1">Срочность (дней)</label>
-          <input type="text" placeholder="Срочность (дней)" class='modal-input' name='urgency' id="form_input1">
-          <br>
-          <label for="form_input2">Адрес филиала</label>
-          <input type="text" placeholder="Адрес филиала" class='modal-input' name='adress' id="form_input2">
-          <br>
-          <label for="form_input3">Количество фотографий</label>
-          <input type="text" placeholder="Количество фотографий" class='modal-input' name='photo_number' id="form_input3">
-          <br>
-          <label for="form_input4">Тип бумаги</label>
-          <input type="text" placeholder="Тип бумаги" class='modal-input' name='paper_type' id="form_input4">
-          <br>
-          <label for="form_input5">Формат бумаги</label>
-          <input type="text" placeholder="Формат бумаги" class='modal-input' name='paper_format' id="form_input5">
-          <br>
+          {% if form.errors %}
+            <p>Пожалуйста исправьте следующие ошибки: </p>
+          {% for field in form %}
+          {% if field.errors %}
+                    <div class="alert alert-primary" role="alert">
+                        {{ field.label }}: {{ field.errors|striptags }}
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                    {% endif %}
+          <label style="display:block;" class="my-4">{{ form.urgency_rate.label }}<span class="text-muted small"> (Обязательно)</span></label>
+                    {{ form.urgency_rate }}
+          <label style="display:block;" class="my-4">{{ form.facility.label }}<span class="text-muted small"> (Обязательно)</span></label>
+                    {{ form.facility }}
+          <label style="display:block;" class="my-4">{{ form.number_of_photos.label }}<span class="text-muted small"> (Обязательно)</span></label>
+                    {{ form.number_of_photos }}
+          <label style="display:block;" class="my-4">{{ form.paper_type.label }}<span class="text-muted small"> (Обязательно)</span></label>
+                    {{ form.paper_type }}
+          <label style="display:block;" class="my-4">{{ form.photo_format.label }}<span class="text-muted small"> (Обязательно)</span></label>
+                    {{ form.photo_format }}
           <button type="submit" class="btn btn-outline-secondary">Добавить в корзину</button>
           </form>
       </div>
