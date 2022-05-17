@@ -1,6 +1,6 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import ListView
-from .models import Services, UserBase, Order
+from .models import Services, UserBase, Order, Facility_type
 from django.contrib.auth.decorators import login_required
 from .forms import RegistrationForm, OrderForm
 from django.http.response import HttpResponse
@@ -63,8 +63,10 @@ class mainView(ListView):
 
 
 def ItemDetailView(request,pk):
+    facilities = Facility_type.objects.all()
     services = Services.objects.get(id=pk)
     if request.method == 'POST':
+        selected_item = get_object_or_404(Facility_type, title=request.POST.get('item_id'))
         orderForm = OrderForm(request.POST)                                    
         if orderForm.is_valid():                                                                      
             order = Order.objects.create(client=request.user)
@@ -72,7 +74,7 @@ def ItemDetailView(request,pk):
             order_service.order = order.id
             order_service.service = services.id
             order_service.urgency_rate = orderForm.cleaned_data['urgency_rate']
-            order_service.facility = orderForm.cleaned_data['facility']
+            order_service.facility = selected_item
             order_service.number_of_photos = orderForm.cleaned_data['number_of_photos']
             order_service.paper_type = orderForm.cleaned_data['paper_type']
             order_service.photo_format = orderForm.cleaned_data['photo_format']
@@ -85,4 +87,4 @@ def ItemDetailView(request,pk):
     
     else:
         orderForm = OrderForm()
-    return render(request, 'service_detail.html', {'form': orderForm, 'services': services})
+    return render(request, 'service_detail.html', {'form': orderForm, 'services': services, 'facilities': facilities})

@@ -36,11 +36,8 @@ class RegistrationForm(forms.ModelForm):
 
 class OrderForm(forms.ModelForm):
 
-    Facility_choices = [tuple[x.title] for x in Facility_type.objects.all()]
-
-
     urgency_rate = forms.IntegerField(label='Введите срочность заказа (в днях)')
-    facility = forms.CharField(label='Введите филиал', widget=forms.Select(choices=Facility_choices))
+    facility = forms.CharField(label='Введите филиал')
     number_of_photos = forms.IntegerField(label='Введите количество фотографий')
     paper_type = forms.CharField(label='Введите тип бумаги')
     photo_format =  forms.CharField(label='Введите формат фото')
@@ -48,9 +45,9 @@ class OrderForm(forms.ModelForm):
         model = OrderService
         fields = ('urgency_rate', 'facility', 'number_of_photos', 'paper_type', 'photo_format')
 
-    def data_check(self):
-        data = self.cleaned_data
-        facility = Facility_type.objects.filter(title=data['title'])
-        if not facility.count():
-            raise forms.ValidationError('Данного филиала не существует')
-        return data               
+    # def data_check(self):
+    #     data = self.cleaned_data
+    #     facility = Facility_type.objects.filter(title=data['title'])
+    #     if not facility.count():
+    #         raise forms.ValidationError('Данного филиала не существует')
+    #     return data               

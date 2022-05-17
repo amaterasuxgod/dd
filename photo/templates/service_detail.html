@@ -21,7 +21,11 @@
           <label style="display:block;" class="my-4">{{ form.urgency_rate.label }}<span class="text-muted small"> (Обязательно)</span></label>
                     {{ form.urgency_rate }}
           <label style="display:block;" class="my-4">{{ form.facility.label }}<span class="text-muted small"> (Обязательно)</span></label>
-                    {{ form.facility }}
+          <select name="item_id">
+          {% for item in facilities %}
+                    <option>{{item.title}}</option>
+          {% endfor %}
+         </select>
           <label style="display:block;" class="my-4">{{ form.number_of_photos.label }}<span class="text-muted small"> (Обязательно)</span></label>
                     {{ form.number_of_photos }}
           <label style="display:block;" class="my-4">{{ form.paper_type.label }}<span class="text-muted small"> (Обязательно)</span></label>
