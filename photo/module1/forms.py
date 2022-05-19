@@ -37,7 +37,6 @@ class RegistrationForm(forms.ModelForm):
 class OrderForm(forms.ModelForm):
 
     urgency_rate = forms.IntegerField(label='Введите срочность заказа (в днях)')
-    facility = forms.CharField(label='Введите филиал')
     number_of_photos = forms.IntegerField(label='Введите количество фотографий')
     paper_type = forms.CharField(label='Введите тип бумаги')
     photo_format =  forms.CharField(label='Введите формат фото')
