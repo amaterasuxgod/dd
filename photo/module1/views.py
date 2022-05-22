@@ -70,9 +70,10 @@ def ItemDetailView(request,pk):
         orderForm = OrderForm(request.POST)                                    
         if orderForm.is_valid():                                                                      
             order = Order.objects.create(client=request.user)
+            # created_order = Order.objects.order_by('id')[0]
             order_service = orderForm.save(commit=False)
-            order_service.order = order.id
-            order_service.service = services.id
+            order_service.order = order
+            order_service.service = services
             order_service.urgency_rate = orderForm.cleaned_data['urgency_rate']
             order_service.facility = selected_item
             order_service.number_of_photos = orderForm.cleaned_data['number_of_photos']
