@@ -69,16 +69,17 @@ def ItemDetailView(request,pk):
         selected_item = get_object_or_404(Facility_type, title=request.POST.get('item_id'))
         orderForm = OrderForm(request.POST)                                    
         if orderForm.is_valid():                                                                      
-            order = Order.objects.create(client=request.user)
+            
             # created_order = Order.objects.order_by('id')[0]
             order_service = orderForm.save(commit=False)
-            order_service.order = order
+            order_service.order = Order.objects.create(client=request.user)
             order_service.service = services
             order_service.urgency_rate = orderForm.cleaned_data['urgency_rate']
             order_service.facility = selected_item
             order_service.number_of_photos = orderForm.cleaned_data['number_of_photos']
             order_service.paper_type = orderForm.cleaned_data['paper_type']
             order_service.photo_format = orderForm.cleaned_data['photo_format']
+            order_service.price = services.regular_price * order_service.number_of_photos
             order_service.save()
 
             return render(request, 'order_success.html')
