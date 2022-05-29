@@ -36,17 +36,46 @@ class RegistrationForm(forms.ModelForm):
 
 class OrderForm(forms.ModelForm):
 
+    PAPER_TYPE_CHOICE  =(
+    ("Matte", "Matte"),
+    ("Glossy", "Glossy"),
+    ("Semi-Glossy", "Semi-Glossy"),
+    ("SuperGlossy", "SuperGlossy"),
+    ("Silk", "Silk"),
+    ("Satin", "Satin"),
+)
+
+    PHOTO_FORMAT_CHOICE  =(
+    ("10x15", "10x15"),
+    ("15x20", "15x20"),
+    ("21x30", "21x30"),
+    ("9x12", "9x12"),
+    ("11,5x15", "11,5x15"),
+    ("15x22,5", "15x22,5"),
+    ("10x30", "10x30"),
+    ("15x45", "15x45"),
+    ("20x30", "20x30"),
+    ("30x40", "30x40"),
+    ("30x42", "30x42"),
+    ("30x45", "30x45"),
+)
+
+
+
+
     urgency_rate = forms.IntegerField(label='Введите срочность заказа (в днях)')
-    number_of_photos = forms.IntegerField(label='Введите количество фотографий')
-    paper_type = forms.CharField(label='Введите тип бумаги')
-    photo_format =  forms.CharField(label='Введите формат фото')
+    number_of_photos = forms.IntegerField(label='Введите количество')
+    paper_type = forms.ChoiceField(label='Введите тип бумаги', choices=PAPER_TYPE_CHOICE)
+    photo_format =  forms.ChoiceField(label='Введите формат фото', choices=PHOTO_FORMAT_CHOICE)
     class Meta:
         model = OrderService
         fields = ('urgency_rate', 'number_of_photos', 'paper_type', 'photo_format')
 
-    # def data_check(self):
-    #     data = self.cleaned_data
-    #     facility = Facility_type.objects.filter(title=data['title'])
-    #     if not facility.count():
-    #         raise forms.ValidationError('Данного филиала не существует')
-    #     return data               
+
+
+class GoodsOrderForm(forms.ModelForm):
+
+    number_of_photos = forms.IntegerField(label='Введите количество')
+    class Meta:
+        model = OrderService
+        fields = ('number_of_photos',)    

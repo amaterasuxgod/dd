@@ -173,6 +173,7 @@ body {
     margin: 50px 100px 0px 100px;
 }
 
+
 footer {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px,1fr));

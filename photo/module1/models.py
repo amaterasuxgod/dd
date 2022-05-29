@@ -119,12 +119,12 @@ class Services(models.Model):
         ('service', 'Services'),
     ]
     category = models.CharField(max_length=32, choices=CHOICES, default='good')
-    description = models.TextField(verbose_name=_("description"), help_text=_("Not required"), blank=True)
+    description = models.TextField(verbose_name=_("Описание"), help_text=_("Not required"), blank=True)
     image = models.ImageField(verbose_name='image', help_text=_("Upload a product image"), default="photos/photo-roll.png", upload_to="photos/")
     regular_price = models.FloatField(verbose_name=_("Regular price"), help_text=_("Максимально 10 цифр"))
     created_at = models.DateTimeField(_("Created at"), auto_now_add=True, editable=False)
     updated_at = models.DateTimeField(_("Updated at"), auto_now_add=True)
-    
+    available = models.IntegerField(blank=True, null=True)
     class Meta:
         ordering = ('-created_at',)
         verbose_name = 'Сервис'
@@ -137,18 +137,20 @@ class Services(models.Model):
 class OrderService(models.Model):
     order = models.ForeignKey(Order, related_name='order', on_delete=models.CASCADE)
     service = models.ForeignKey(Services, related_name='service', on_delete=models.CASCADE)
-    urgency_rate = models.IntegerField(default = 3)
+    urgency_rate = models.IntegerField(null=True)
     facility = models.ForeignKey(Facility_type, related_name='facilities', on_delete=models.RESTRICT, default=None)
     is_urgent = models.BooleanField(default=False)
     number_of_photos = models.IntegerField(default=1)
-    paper_type = models.CharField(verbose_name=_("paper type"), help_text=_("Required"), max_length=255, blank=True)
-    photo_format =  models.CharField(verbose_name=_("photo format"), help_text=_("Required"), max_length=255, blank=True)
+    paper_type = models.CharField(verbose_name=_("paper type"), help_text=_("Required"), max_length=255, null=True)
+    photo_format =  models.CharField(verbose_name=_("photo format"), help_text=_("Required"), max_length=255, null=True)
     price = models.FloatField(verbose_name=_("total price"), help_text=_("Максимально 10 цифр"), default=None)
 
     class Meta:
         verbose_name = 'Детали заказа'
         verbose_name_plural = 'Детали заказов'
     
+    def __str__(self):
+        return 'Заказ: {}, срочность: {}'.format(self.order.id,self.urgency_rate)
 
     def get_total_price(self):
 

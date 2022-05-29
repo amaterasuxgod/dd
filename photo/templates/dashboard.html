@@ -5,7 +5,29 @@
     <div class="row">
         <div class="col-md-12 d-flex align-items-center justify-content-center">
            <h1>Профиль пользователя</b>
-                
+        </div>
+    </div>
+    {% for item in orders %}
+        <div class="row basket-row1 text-center" >
+            <div class="col d-flex flex-column align-items-center justify-content-center">
+                <a href="{% url 'module1:detail' item.id %}" class='text-decoration-none text-reset'><p>{{ item.service }}</p></a>
+            </div>
+            <div class="col d-flex flex-column align-items-center justify-content-center">
+                <p>{{ item.qty }}</p>
+            </div>
+            <div class="col d-flex flex-column align-items-center justify-content-center">
+               <button id="basket-delete-item" data-index="{{product.id}}" class='delete-button'><i class="fas fa-times"></i></button>
+            </div>
+            <div class="col d-flex flex-column align-items-center justify-content-center">
+                <p>{{ item.price }} BYN</p>
+            </div>
+        </div>
+        {% endfor %}
+    <div class="row">
+        <div class="col-md-12 d-flex align-items-center justify-content-center">
+            <a href="{% url 'module1:logout' %}">
+            <button class="btn btn-info my-4 align-items-center register-button">Выйти</button>
+            </a>
         </div>
     </div>
 </div>
