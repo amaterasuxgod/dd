@@ -8,5 +8,13 @@
                 
         </div>
     </div>
+    {% for facility in adresses %}
+    <div class="row">
+        <div class="col-md-12 d-flex align-items-center justify-content-center">
+           <p>{{facility.title}} - {{facility.adress}}<p>
+                
+        </div>
+    </div>
+    {% endfor %}
 </div>
 {% endblock content %}

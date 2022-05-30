@@ -11,7 +11,9 @@ def Contacts(request):
     return render(request, 'contacts.html')
 
 def Adresses(request):
-    return render(request, 'adresses.html')
+    facilities = Facility_type.objects.all()
+
+    return render(request, 'adresses.html', {'adresses':facilities})
 
 
 def Goods_by_category(request):
@@ -50,10 +52,10 @@ def account_register(request):
 
 
 def DashboardView(request):
-    orders = Order.objects.filter(client=request.user)
-    services = OrderService.filter(order=orders)
+    #orders = Order.objects.filter(client=request.user)
+    #services = OrderService.objects.filter(order=orders)
     if request.user.is_authenticated:
-        return render(request, 'dashboard.html', {'orders': services})
+        return render(request, 'dashboard.html')
     else:
         return redirect('/home/login/')
 
@@ -124,7 +126,7 @@ def ItemDetailView(request,pk):
                 order_service.price = services.regular_price * order_service.number_of_photos
                 order_service.save()
 
-                return render(request, 'order_success.html')
+                return render(request, 'order_success.html', {'price': order_service.price})
             
             else:
                 return HttpResponse('Validation error')
