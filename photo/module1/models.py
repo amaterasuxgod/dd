@@ -71,6 +71,7 @@ class UserBase(AbstractBaseUser, PermissionsMixin):
     amount_of_orders = models.IntegerField(default=0)
     created = models.DateField(auto_now_add=True)
     updated = models.DateField(auto_now=True)
+    has_discount = models.BooleanField(default=False)
 
     objects = CustomAccountManager()
 

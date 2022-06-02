@@ -68,6 +68,7 @@ class mainView(ListView):
 
 def ItemDetailView(request,pk):
     facilities = Facility_type.objects.all()
+    user = UserBase.objects.get(user_name=request.user.user_name) 
     services = Services.objects.get(id=pk)
     if services.category == 'service':
         if request.method == 'POST':
@@ -100,6 +101,13 @@ def ItemDetailView(request,pk):
                     order_service.price = order_service.price * 1.8
                 if order_service.urgency_rate < 3:
                     order_service.price = order_service.price * 2
+                if order_service.number_of_photos>20:
+                    order_service.price = order_service.price * 0.95
+                if services.title == 'Скидочная карта' and user.has_discount==False:
+                    user.has_discount = True
+                if user.has_discount == True:
+                     order_service.price = order_service.price * 0.90
+                user.save()
                 order_service.save()
 
                 return render(request, 'order_success.html', {'price': order_service.price})
@@ -124,6 +132,21 @@ def ItemDetailView(request,pk):
                 order_service.facility = selected_item
                 order_service.number_of_photos = orderForm.cleaned_data['number_of_photos']
                 order_service.price = services.regular_price * order_service.number_of_photos
+                if services.title == 'Скидочная карта' and user.has_discount==False:
+                    user.has_discount = True
+                if user.has_discount == True and services.title!='Скидочная карта':
+                     order_service.price = order_service.price * 0.90
+                # orders = Order.objects.filter(client=request.user)
+                # # query = OrderService.objects.filter(order=orders)
+                # queryset = []
+                # queryset2 = []
+                # for item in orders:
+                #     queryset.append(item)
+                
+                # for item in queryset:
+                #     queryset2.append(OrderService.objects.get(order=item))
+
+                user.save()
                 order_service.save()
 
                 return render(request, 'order_success.html', {'price': order_service.price})
