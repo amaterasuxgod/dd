@@ -69,6 +69,8 @@ class mainView(ListView):
 def ItemDetailView(request,pk):
     facilities = Facility_type.objects.all()
     services = Services.objects.get(id=pk)
+    # tape = 'Пленка'
+    # same_scene = OrderService.objects.filter(service='Пленка')
     if services.category == 'service':
         if request.method == 'POST':
             if request.user.is_authenticated:
@@ -107,6 +109,14 @@ def ItemDetailView(request,pk):
                             user.has_discount = True
                         if user.has_discount == True:
                             order_service.price = order_service.price * 0.90
+                        if user.is_professional==True:
+                            order_service.price = order_service.price * 0.90
+                        # if same_scene:
+                        #     for item in same_scene:
+                        #         if item.facility == order_service.facility:
+                        #             order_service.price = order_service.price * 0                                  
+                        # else:
+                        #     pass
                         user.save()
                         order_service.save()
 
@@ -139,7 +149,9 @@ def ItemDetailView(request,pk):
                         user.has_discount = True
                     if user.has_discount == True and services.title!='Скидочная карта':
                         order_service.price = order_service.price * 0.90
-                    orders = Order.objects.filter(client=request.user)
+                    if user.is_professional==True:
+                        order_service.price = order_service.price * 0.90
+                    # orders = OrderService.objects.filter(facility='Филиал №1')       
                     # query = OrderService.objects.filter(order=orders)
                     # queryset = []
                     # queryset2 = []
