@@ -52,10 +52,9 @@ def account_register(request):
 
 
 def DashboardView(request):
-    #orders = Order.objects.filter(client=request.user)
-    #services = OrderService.objects.filter(order=orders)
     if request.user.is_authenticated:
-        return render(request, 'dashboard.html')
+        orders = user_orders(request)
+        return render(request, 'dashboard.html', {'orders': orders})
     else:
         return redirect('/home/login/')
 
@@ -173,3 +172,10 @@ def ItemDetailView(request,pk):
         else:
             orderForm = GoodsOrderForm()
         return render(request, 'goods_detail.html', {'form': orderForm, 'services': services, 'facilities': facilities})    
+
+
+
+def user_orders(request):
+    user_id = request.user.id
+    orders = Order.objects.filter(client=user_id)
+    return orders

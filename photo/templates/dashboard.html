@@ -7,6 +7,52 @@
            <h1>Профиль пользователя</b>
         </div>
     </div>
+    <!-- <div class="container-fluid basket-container">
+        {% for order in orders %}
+        <div class="row basket-row1" style="border-top: none;">
+            <h3 class='mb-3'>Дата заказа: {{ order.created }}</h3>
+            <ul class="dropdown-menu" aria-labelledby="dropdownLink">
+                <li class="item small">{{order.full_name}}</li>
+                <li class="item small">{{order.address1}}</li>
+                <li class="item small">{{order.address2}}</li>
+                <li class="item small">{{order.post_code}}</li>
+              </ul>
+        </div>
+        <div class="row basket-row text-center" style='background-color: gray'>
+            <div class="col basket-col">
+                <p>Товар</p>
+            </div>
+            <div class="col basket-col">
+                <p>Описание</p>
+            </div>
+            <div class="col basket-col">
+                <p>Количество</p>
+            </div>
+            <div class="col basket-col">
+                <p>Цена</p>
+            </div>
+        </div>
+        {% for item in order.items.all %}
+        <div class="row basket-row1 text-center" style='margin-bottom: 100px;'>
+            <div class="col d-flex flex-column align-items-center justify-content-center">
+                {% for image in item.service.image.all %}
+                <img src="{{ image.image.url }}" alt="" width='50' height="50">
+                {% endfor %}
+                <a href="{% url 'index:pc-detail' item.product.id %}" class='text-decoration-none text-reset'><p>{{ item.product.title }}</p></a>
+            </div>
+            <div class="col d-flex flex-column align-items-center justify-content-center">
+                <p>{{ item.service.description}}</p>
+            </div>
+            <div class="col d-flex flex-column align-items-center justify-content-center">
+                <p>{{ item.quantity }}</p>
+            </div>
+            <div class="col d-flex flex-column align-items-center justify-content-center">
+                <p>{{ item.price }} BYN</p>
+            </div>
+        </div>
+        {% endfor %}
+    {% endfor %}
+    </div> -->
     <div class="row">
         <div class="col-md-12 d-flex align-items-center justify-content-center">
             <a href="{% url 'module1:logout' %}">
