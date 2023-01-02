@@ -166,3 +166,5 @@ class OrderService(models.Model):
         if self.urgency_rate < 3:
             self.is_urgent = True
             self.price = self.price * 2
+        
+        

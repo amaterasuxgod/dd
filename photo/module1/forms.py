@@ -37,12 +37,12 @@ class RegistrationForm(forms.ModelForm):
 class OrderForm(forms.ModelForm):
 
     PAPER_TYPE_CHOICE  =(
-    ("Matte", "Matte"),
-    ("Glossy", "Glossy"),
-    ("Semi-Glossy", "Semi-Glossy"),
-    ("SuperGlossy", "SuperGlossy"),
-    ("Silk", "Silk"),
-    ("Satin", "Satin"),
+    ("Matte (Матовая)", "Matte (Матовая)"),
+    ("Glossy (Глянцевая)", "Glossy (Глянцевая)"),
+    ("Semi-Glossy (Полуглянцевая)", "Semi-Glossy (Полуглянцевая)"),
+    ("SuperGlossy (Сверхглянцевая)", "SuperGlossy (Сверхглянцевая)"),
+    ("Silk (Шелковая)", "Silk (Шелковая)"),
+    ("Satin (Атласная)", "Satin (Атласная)"),
 )
 
     PHOTO_FORMAT_CHOICE  =(

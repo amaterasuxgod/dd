@@ -110,6 +110,8 @@ def ItemDetailView(request,pk):
                             order_service.price = order_service.price * 0.90
                         if user.is_professional==True:
                             order_service.price = order_service.price * 0.90
+                        rounded_price = round(order_service.price, 2)
+                        order_service.price = rounded_price
                         # if same_scene:
                         #     for item in same_scene:
                         #         if item.facility == order_service.facility:
