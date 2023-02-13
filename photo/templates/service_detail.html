@@ -6,7 +6,7 @@
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content mymodal-content rounded-5">
       <div class="modal-header my-modal-header">
-          <form action="{% url 'module1:detail' services.id %}" method="POST">
+          <form action="{% url 'module1:detail' services.id %}" method="POST" enctype="multipart/form-data">
           {% csrf_token %}
           {% if form.errors %}
             <p>Пожалуйста исправьте следующие ошибки: </p>
@@ -26,8 +26,10 @@
                     <option>{{item.title}}</option>
           {% endfor %}
          </select>
-          <label style="display:block;" class="my-4">{{ form.number_of_photos.label }}<span class="text-muted small"> (Обязательно)</span></label>
-                    {{ form.number_of_photos }}
+         <br>
+          <label class="my-4">Добавьте фото</label>
+          <br>
+          <input name="images" type="file" multiple>
           <label style="display:block;" class="my-4">{{ form.paper_type.label }}<span class="text-muted small"> (Обязательно)</span></label>
                     {{ form.paper_type }}
           <label style="display:block;" class="my-4">{{ form.photo_format.label }}<span class="text-muted small"> (Обязательно)</span></label>
@@ -56,7 +58,7 @@
       </nav>  
     </div>
     <div class="col-6 d-flex justify-content-end align-items-center">
-      <h3 class="price">{{ services.regular_price }} BYN</h3>  
+      <h3 class="price">От {{ services.regular_price }} BYN</h3>  
     </div>
   </div>
   <div class="row products-detail-row2">
@@ -68,7 +70,7 @@
     <div class="col-lg products-detail-column-2 my-2">
       <h1>{{ services.title }}</h1>
       <p class="my-4">{{ services.description }}</p>
-      <h2 class='product-detail-price'>{{ services.regular_price}} BYN</h2>
+      <h2 class='product-detail-price'>От {{ services.regular_price}} BYN</h2>
       <button type="button" onclick="showmodal()" class="btn btn-info" style="margin-top:30px">Заказать</button>
     </div>
   </div>

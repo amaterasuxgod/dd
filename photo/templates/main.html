@@ -44,7 +44,7 @@
         <a href="{% url 'module1:detail' item.id %}">
           <h3 class='products-item-title'>{{ item.title }}</h3>
           <img src="{{ item.image.url }}" alt="" width='330' height='330'>
-          <p>{{ item.regular_price }} руб.</p>
+          <p>От {{ item.regular_price }} руб.</p>
         </a>
       </div>
       {% endfor %}

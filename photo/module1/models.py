@@ -135,6 +135,15 @@ class Services(models.Model):
     def __str__(self):
         return self.title
 
+
+
+class Order_photo(models.Model):
+    photo = models.FileField(verbose_name='order_photo', help_text=_("Выберите фото"))
+    order = models.ForeignKey(Order, related_name='photo_order', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return 'Заказ: {}'.format(self.order.id)
+
 class OrderService(models.Model):
     order = models.ForeignKey(Order, related_name='order', on_delete=models.CASCADE)
     service = models.ForeignKey(Services, related_name='service', on_delete=models.CASCADE)
@@ -145,7 +154,6 @@ class OrderService(models.Model):
     paper_type = models.CharField(verbose_name=_("paper type"), help_text=_("Required"), max_length=255, null=True)
     photo_format =  models.CharField(verbose_name=_("photo format"), help_text=_("Required"), max_length=255, null=True)
     price = models.FloatField(verbose_name=_("total price"), help_text=_("Максимально 10 цифр"), default=None)
-
     class Meta:
         verbose_name = 'Детали заказа'
         verbose_name_plural = 'Детали заказов'

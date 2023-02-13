@@ -1,9 +1,10 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import ListView
-from .models import OrderService, Services, UserBase, Order, Facility_type
+from .models import Services, UserBase, Order, Facility_type, Order_photo
 from django.contrib.auth.decorators import login_required
 from .forms import RegistrationForm, OrderForm, GoodsOrderForm
 from django.http.response import HttpResponse
+from django.contrib import messages
 # Create your views here.
 
 
@@ -27,6 +28,10 @@ def Services_by_category(request):
     services = Services.objects.filter(category='service')
     context = {"services": services}
     return render(request, 'services_by_category.html', context)
+
+
+def Price_formation(request):
+    return render(request, 'price_formation.html')
 
 
 def account_register(request):
@@ -75,53 +80,59 @@ def ItemDetailView(request,pk):
             if request.user.is_authenticated:
                     user = UserBase.objects.get(user_name=request.user.user_name) 
                     selected_item = get_object_or_404(Facility_type, title=request.POST.get('item_id'))
-                    orderForm = OrderForm(request.POST)                                    
+                    orderForm = OrderForm(request.POST)                               
                     if orderForm.is_valid():                                                                      
                         # created_order = Order.objects.order_by('id')[0]
-                        order_service = orderForm.save(commit=False)
-                        order_service.order = Order.objects.create(client=request.user)
-                        order_service.service = services
-                        order_service.urgency_rate = orderForm.cleaned_data['urgency_rate']
-                        order_service.facility = selected_item
-                        order_service.number_of_photos = orderForm.cleaned_data['number_of_photos']
-                        order_service.paper_type = orderForm.cleaned_data['paper_type']
-                        order_service.photo_format = orderForm.cleaned_data['photo_format']
-                        if order_service.paper_type == 'Matte' or order_service.paper_type == 'Glossy' or order_service.paper_type == 'Semi-Glossy':
-                            order_service.price = services.regular_price*1.1 * order_service.number_of_photos
-                        if order_service.paper_type == 'SuperGlossy' or order_service.paper_type == 'Silk' or order_service.paper_type == 'Satin':
-                            order_service.price = services.regular_price*1.2 * order_service.number_of_photos
-                        if order_service.photo_format == '10x15' or order_service.photo_format == '9x12':
-                            order_service.price = order_service.price * 1.1
-                        if order_service.photo_format == '15x20' or order_service.photo_format == '15x22,5' or order_service.photo_format == '11,5x15':
-                            order_service.price = order_service.price * 1.2
-                        if order_service.photo_format == '21x30' or order_service.photo_format == '10x30' or order_service.photo_format == '15x45':
-                            order_service.price = order_service.price * 1.3
-                        if order_service.photo_format == '20x30':
-                            order_service.price = order_service.price * 1.6
-                        if order_service.photo_format == '30x40' or order_service.photo_format == '30x42' or order_service.photo_format == '30x45':
-                            order_service.price = order_service.price * 1.8
-                        if order_service.urgency_rate < 3:
-                            order_service.price = order_service.price * 2
-                        if order_service.number_of_photos>20:
-                            order_service.price = order_service.price * 0.95
-                        if services.title == 'Скидочная карта' and user.has_discount==False:
-                            user.has_discount = True
-                        if user.has_discount == True:
-                            order_service.price = order_service.price * 0.90
-                        if user.is_professional==True:
-                            order_service.price = order_service.price * 0.90
-                        rounded_price = round(order_service.price, 2)
-                        order_service.price = rounded_price
-                        # if same_scene:
-                        #     for item in same_scene:
-                        #         if item.facility == order_service.facility:
-                        #             order_service.price = order_service.price * 0                                  
-                        # else:
-                        #     pass
-                        user.save()
-                        order_service.save()
+                        images = request.FILES.getlist('images')  
+                        image_count = 0 
+                        for image in images:
+                            image_count +=1
+                        if image_count < 1:
+                            return HttpResponse('Добавьте хотя бы одну фотографию')
+                        else:
+                            order_service = orderForm.save(commit=False)
+                            order_service.order = Order.objects.create(client=request.user)
+                            order = get_object_or_404(Order, id=order_service.order.id)
+                            for image in images:
+                                Order_photo.objects.create(photo = image, order = order)
+                            order_service.service = services
+                            order_service.urgency_rate = orderForm.cleaned_data['urgency_rate']
+                            order_service.facility = selected_item
+                            order_service.number_of_photos = image_count
+                            order_service.paper_type = orderForm.cleaned_data['paper_type']
+                            order_service.photo_format = orderForm.cleaned_data['photo_format']
+                        
 
-                        return render(request, 'order_success.html', {'price': order_service.price})
+                            if order_service.paper_type == 'Matte (Матовая)' or order_service.paper_type == 'Glossy (Глянцевая)' or order_service.paper_type == 'Semi-Glossy (Полуглянцевая)':
+                                order_service.price = services.regular_price*1.1 * order_service.number_of_photos
+                            if order_service.paper_type == 'SuperGlossy (Сверхглянцевая)' or order_service.paper_type == 'Silk (Шелковая)' or order_service.paper_type == 'Satin (Атласная)':
+                                order_service.price = services.regular_price*1.2 * order_service.number_of_photos
+                            if order_service.photo_format == '10x15' or order_service.photo_format == '9x12':
+                                order_service.price = order_service.price * 1.1
+                            if order_service.photo_format == '15x20' or order_service.photo_format == '15x22,5' or order_service.photo_format == '11,5x15':
+                                order_service.price = order_service.price * 1.2
+                            if order_service.photo_format == '21x30' or order_service.photo_format == '10x30' or order_service.photo_format == '15x45':
+                                order_service.price = order_service.price * 1.3
+                            if order_service.photo_format == '20x30':
+                                order_service.price = order_service.price * 1.6
+                            if order_service.photo_format == '30x40' or order_service.photo_format == '30x42' or order_service.photo_format == '30x45':
+                                order_service.price = order_service.price * 1.8
+                            if order_service.urgency_rate < 3:
+                                order_service.price = order_service.price * 2
+                            if order_service.number_of_photos>20:
+                                order_service.price = order_service.price * 0.95
+                            if services.title == 'Скидочная карта' and user.has_discount==False:
+                                user.has_discount = True
+                            if user.has_discount == True:
+                                order_service.price = order_service.price * 0.90
+                            if user.is_professional==True:
+                                order_service.price = order_service.price * 0.90
+                            rounded_price = round(order_service.price, 2)
+                            order_service.price = rounded_price
+                            user.save()
+                            order_service.save()
+
+                            return render(request, 'order_success.html', {'price': order_service.price})
                 
                     else:
                         return HttpResponse('Validation error')

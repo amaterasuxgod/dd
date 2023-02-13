@@ -1,5 +1,5 @@
 from django import forms
-from .models import OrderService, UserBase, Facility_type
+from .models import OrderService, UserBase, Facility_type, Order_photo
 
 
 class RegistrationForm(forms.ModelForm):
@@ -64,12 +64,11 @@ class OrderForm(forms.ModelForm):
 
 
     urgency_rate = forms.IntegerField(label='Введите срочность заказа (в днях)')
-    number_of_photos = forms.IntegerField(label='Введите количество')
     paper_type = forms.ChoiceField(label='Введите тип бумаги', choices=PAPER_TYPE_CHOICE)
     photo_format =  forms.ChoiceField(label='Введите формат фото', choices=PHOTO_FORMAT_CHOICE)
     class Meta:
         model = OrderService
-        fields = ('urgency_rate', 'number_of_photos', 'paper_type', 'photo_format')
+        fields = ('urgency_rate', 'paper_type', 'photo_format')
 
 
 
@@ -78,4 +77,4 @@ class GoodsOrderForm(forms.ModelForm):
     number_of_photos = forms.IntegerField(label='Введите количество')
     class Meta:
         model = OrderService
-        fields = ('number_of_photos',)    
+        fields = ('number_of_photos',)  
