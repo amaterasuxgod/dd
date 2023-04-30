@@ -175,4 +175,10 @@ class OrderService(models.Model):
             self.is_urgent = True
             self.price = self.price * 2
         
-        
+class UserOrderHistory(models.Model):
+    user = models.ForeignKey(UserBase,on_delete=models.CASCADE)
+    order = models.ForeignKey(Order,on_delete=models.SET_NULL,null=True)
+
+    class Meta:
+        verbose_name = 'История заказа'
+        verbose_name_plural = 'Истории заказов'

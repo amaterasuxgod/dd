@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import mainView, Contacts, Adresses, account_register, ItemDetailView, Services_by_category, Goods_by_category, DashboardView, Price_formation
+from .views import mainView, Contacts, Adresses, account_register, ItemDetailView, Services_by_category, Goods_by_category, DashboardView, Price_formation,GetUserOrderHistry
 from django.contrib.auth import views as auth_views
 
 
@@ -17,4 +17,5 @@ urlpatterns = [
     path('goods_by_category/', Goods_by_category, name="goods-by-category"),
     path('dashboard/', DashboardView, name="dashboard"),
     path('price_formation/', Price_formation, name="price"),
+    path('order_histories/',GetUserOrderHistry,name="history")
 ]

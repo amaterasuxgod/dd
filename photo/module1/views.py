@@ -1,10 +1,12 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import ListView
-from .models import Services, UserBase, Order, Facility_type, Order_photo
+from .models import Services, UserBase, Order, Facility_type, Order_photo,UserOrderHistory,OrderService
 from django.contrib.auth.decorators import login_required
 from .forms import RegistrationForm, OrderForm, GoodsOrderForm
 from django.http.response import HttpResponse
 from django.contrib import messages
+from django.core.mail import send_mail
+from django.conf import settings
 # Create your views here.
 
 
@@ -78,7 +80,7 @@ def ItemDetailView(request,pk):
     if services.category == 'service':
         if request.method == 'POST':
             if request.user.is_authenticated:
-                    user = UserBase.objects.get(user_name=request.user.user_name) 
+                    user:UserBase = UserBase.objects.get(user_name=request.user.user_name) 
                     selected_item = get_object_or_404(Facility_type, title=request.POST.get('item_id'))
                     orderForm = OrderForm(request.POST)                               
                     if orderForm.is_valid():                                                                      
@@ -90,7 +92,8 @@ def ItemDetailView(request,pk):
                         if image_count < 1:
                             return HttpResponse('Добавьте хотя бы одну фотографию')
                         else:
-                            order_service = orderForm.save(commit=False)
+                            order_service:OrderService = orderForm.save(commit=False)
+
                             order_service.order = Order.objects.create(client=request.user)
                             order = get_object_or_404(Order, id=order_service.order.id)
                             for image in images:
@@ -131,7 +134,16 @@ def ItemDetailView(request,pk):
                             order_service.price = rounded_price
                             user.save()
                             order_service.save()
-
+                            if not UserOrderHistory.objects.filter(user=user,order=order_service.order):
+                                UserOrderHistory.objects.create(user=user,order=order_service.order)
+                            send_mail(
+                                "Photofy",
+                                "Ваш заказ принят!\n"+
+                                "По готовности наш специалист свяжется с Вами!",
+                                settings.EMAIL_HOST_USER,
+                                ['konst.paduto@gmail.com'],
+                                fail_silently=False
+                            )
                             return render(request, 'order_success.html', {'price': order_service.price})
                 
                     else:
@@ -175,7 +187,17 @@ def ItemDetailView(request,pk):
 
                     user.save()
                     order_service.save()
-
+                    print(1)
+                    # send_mail(
+                    #     "Photofy",
+                    #     "Ваш заказ принят!\n"+
+                    #     "По готовности наш специалист свяжется с Вами!",
+                    #     settings.EMAIL_HOST_USER,
+                    #     ['konst.paduto@gmail.com'],
+                    #     fail_silently=False
+                    # )
+                    # print(1)
+                    # print(email.send(fail_silently=False))
                     return render(request, 'order_success.html', {'price': order_service.price})
                 
                 else:
@@ -192,3 +214,8 @@ def user_orders(request):
     user_id = request.user.id
     orders = Order.objects.filter(client=user_id)
     return orders
+
+
+def GetUserOrderHistry(request):
+    order_histories = UserOrderHistory.objects.filter(user=request.user)
+    return render(request,'order_history.html',{"order_histories":order_histories})

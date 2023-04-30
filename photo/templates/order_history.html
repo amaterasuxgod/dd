@@ -1,0 +1,10 @@
+{% extends "base.html"%}
+
+{% block content %}
+    {% for item in order_histories %}
+      <div class="products-section-item">
+          <p>{{ item.pk }}</p>
+          <p>{{ item.Order_photo }}</p>
+      </div>
+    {% endfor %}
+{% endblock %}
